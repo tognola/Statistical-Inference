@@ -2,6 +2,8 @@
 title: 'Exponential Distribution and CLT'
 author: "Gastón Tognola"
 output:
+  html_document: default
+  pdf_document: default
   md_document:
     variant: markdown_github
 ---
