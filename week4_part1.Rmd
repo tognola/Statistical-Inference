@@ -2,8 +2,8 @@
 title: 'Exponential Distribution and CLT'
 author: "Gastón Tognola"
 output:
-  pdf_document: default
-  html_document: default
+  md_document:
+    variant: markdown_github
 ---
 
 ```{r setup, include=FALSE}
@@ -72,6 +72,7 @@ g <- g + stat_function(fun = dnorm, args = list(mean = 1/lambda, sd = 1/lambda/s
 g + xlim(2,8) + xlab("Means") + ylab("Density") + geom_vline(xintercept = sampleMean, color = 'red', size = 1)  + geom_vline(xintercept = theoreticalMean, color = 'blue', size = 1)  + geom_vline(xintercept = sampleMean-sampleVar, color = 'red', size = 1, linetype="dashed") + geom_vline(xintercept = sampleMean+sampleVar, color = 'red', size = 1, linetype="dashed")+ geom_vline(xintercept = theoreticalMean-theoreticalVar, color = 'blue', size = 1, linetype="dashed") + geom_vline(xintercept = theoreticalMean+theoreticalVar, color = 'blue', size = 1, linetype="dashed") + scale_colour_manual(name = 'the colour', 
          values =c('blue'='blue','red'='red'), labels = c('Sample','Theorical'))
 ```
+
 In the figure above, we can see that the samples means distribution (red lines) is very similar to the normal distribution (blue lines), they both have similar mean (vertical lines) and variance (vertical dashed lines).
 
 ## Means distribution
