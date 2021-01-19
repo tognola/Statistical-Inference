@@ -1,0 +1,92 @@
+---
+title: 'Exponential Distribution and CLT'
+author: "Gastón Tognola"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,tidy.opts=list(width.cutoff=80), tidy=TRUE)
+```
+
+
+## Overview
+
+In this project we investigate the exponential distribution and compare it with the CLT. We test the distribution of averages of 40 exponentials in a thousand simulations.
+
+## Simulation
+
+First we setup the environment an create the variables.
+```{r}
+library(ggplot2)
+lambda <- 0.2
+mean <- 1/lambda
+sd <- 1/lambda
+n <- 40
+sim <- 1000
+```
+
+With the environment ready, we generate a vector of averages of 40 exponentials:
+```{r, tidy=TRUE, tidy.opts=list(width.cutoff=60)}
+set.seed(11) 
+mns = NULL
+for (i in 1 : 1000) mns = c(mns, mean(rexp(n, lambda)))
+```
+
+### 1. Sample mean and theoritcal mean of the distribution
+```{r}
+sampleMean = mean(mns)
+theoreticalMean = 1/lambda
+```
+
+```{r,  echo=FALSE}
+cat("sampleMean:", sampleMean, "- theoreticalMean: " ,theoreticalMean)
+```
+
+
+### 2. Standard Deviation and Variance
+```{r}
+sampleSd = sd(mns)
+theoreticalSd = (1/lambda)/sqrt(n)
+```
+
+```{r, echo=FALSE}
+cat("sampleSd:", sampleSd, "- theoreticalSd: " ,theoreticalSd)
+```
+
+```{r}
+sampleVar = var(mns)
+theoreticalVar = theoreticalSd**2
+```
+
+```{r, echo=FALSE}
+cat("sampleVar:", sampleVar, "- theoreticalVar: " ,theoreticalVar)
+```
+
+```{r, echo = FALSE, warning = FALSE}
+df = data.frame(x = mns)
+g <- ggplot(df, aes(x = x))+geom_histogram(alpha = .20, binwidth=.25,colour = "black", aes(y = ..density..)) 
+g <-  g + geom_density(color = "red", size = 2)
+g <- g + stat_function(fun = dnorm, args = list(mean = 1/lambda, sd = 1/lambda/sqrt(n)), color = 'blue', size =1.5)
+g + xlim(2,8) + xlab("Means") + ylab("Density") + geom_vline(xintercept = sampleMean, color = 'red', size = 1)  + geom_vline(xintercept = theoreticalMean, color = 'blue', size = 1)  + geom_vline(xintercept = sampleMean-sampleVar, color = 'red', size = 1, linetype="dashed") + geom_vline(xintercept = sampleMean+sampleVar, color = 'red', size = 1, linetype="dashed")+ geom_vline(xintercept = theoreticalMean-theoreticalVar, color = 'blue', size = 1, linetype="dashed") + geom_vline(xintercept = theoreticalMean+theoreticalVar, color = 'blue', size = 1, linetype="dashed") + scale_colour_manual(name = 'the colour', 
+         values =c('blue'='blue','red'='red'), labels = c('Sample','Theorical'))
+```
+In the figure above, we can see that the samples means distribution (red lines) is very similar to the normal distribution (blue lines), they both have similar mean (vertical lines) and variance (vertical dashed lines).
+
+## Means distribution
+```{r, echo= FALSE, warning=FALSE}
+library(cowplot)
+data <- data.frame(x = rexp(2000, rate = lambda))
+g1 <- ggplot(data, aes(x = x))+geom_histogram(alpha = .50, binwidth=1,colour = "black", aes(y = ..density..)) + stat_function(fun = dexp, args = (rate = 0.2), color = 'blue', size =1.5) + xlim(0,35)
+df = data.frame(x = mns)
+g2 <- ggplot(df, aes(x = x))+geom_histogram(alpha = .20, binwidth=.25,colour = "black", aes(y = ..density..)) + stat_function(fun = dnorm, args = list(mean = 1/lambda, sd = 1/lambda/sqrt(n)), color = 'blue', size =1.5)
+
+plot_grid(g1,g2, labels = 'AUTO')
+
+```
+
+A. **Distribution of random exponentials**, with a large number of sample we can see that its histogram is similar to the theoretical exponential density function.
+
+
+B. **Distribution of averages of 40 exponentials**,  with a large number of simulations we can see that the distribution of the samples' means approaches a normal distribution.

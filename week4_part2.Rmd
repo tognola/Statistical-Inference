@@ -1,0 +1,19 @@
+---
+title: 'Analyzing ToothGrow dataset'
+author: "Gastón Tognola"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,tidy.opts=list(width.cutoff=80), tidy=TRUE)
+```
+
+# Part 2: Basic Inferential Data Analysis Instructions
+
+
+```{r}
+data(ToothGrowth)
+```
+
